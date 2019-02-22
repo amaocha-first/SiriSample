@@ -7,14 +7,38 @@
 //
 
 import UIKit
+import Intents
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var label: UILabel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let intent = DoSomethingIntent()
+        intent.taskName = "イライラ"
+        intent.suggestedInvocationPhrase = "うれしい"
+        let interaction = INInteraction(intent: intent, response: nil)
+        interaction.donate { error in
+            // エラーハンドリング
+            print("\(error)")
+        }
+        
     }
+}
 
-
+class IntentHandler: INExtension {
+    
+    override func handler(for intent: INIntent) -> Any? {
+        switch intent {
+        case is DoSomethingIntent:
+            return DoSomethingIntentHandler()
+        default:
+            return nil
+            
+        }
+    }
 }
 
